@@ -26,7 +26,7 @@ class AdminController implements ControllerProviderInterface {
 		# Loginformular
 		$route -> get('/admin/login', function() use ($app) {
 			if(isset($_SESSION['admin'])){
-				return $this->adminpanel($app);								
+				return AdminController::adminpanel($app);
 			} else {
 				return $app['twig'] -> render('admin_login.twig', array());
 			}
@@ -44,7 +44,7 @@ class AdminController implements ControllerProviderInterface {
 				$_SESSION['admin'] = $app['admin.name'];
 				
 				# goto adminpanel
-				return $this->adminpanel($app);
+				return AdminController::adminpanel($app);
 							
 			} else {
 				return $app['twig'] -> render('admin_login.twig', array(
@@ -56,7 +56,7 @@ class AdminController implements ControllerProviderInterface {
 		
 		# Adminpanel
 		$route -> get('/admin/admin', function() use ($app) {
-			return $this->adminpanel($app);
+			return AdminController::adminpanel($app);
 		}) -> bind('adminpanel');
 
 
@@ -104,7 +104,7 @@ class AdminController implements ControllerProviderInterface {
 			$data = array();
 			
 			# add abostrohpe if it is a windows system
-			if($this->isWindows()){
+			if(AdminController::isWindows()){
 				$data['git']['client'] = "\"".$request -> get('gitpath')."\"";
 			} else {
 				$data['git']['client'] = $request -> get('gitpath');
@@ -142,7 +142,7 @@ class AdminController implements ControllerProviderInterface {
 			$config -> toFile($app->getPath() .'config.ini');
 
 			return $app['twig'] -> render('admin.twig', array(
-				'repositorypaths' => $this->repositoriesAddBase64Attribute($data['git']['repositories']), 
+				'repositorypaths' => AdminController::repositoriesAddBase64Attribute($data['git']['repositories']), 
 				'client' => trim($data['git']['client'], '"'),
 				'default_branch' => $data['git']['default_branch'], 
 				'cache' => (empty($data['app']['cache']) || $data['app']['cache'] == 'false') ? false : true, 
@@ -155,7 +155,7 @@ class AdminController implements ControllerProviderInterface {
 		return $route;
 	}
 
-	public function repositoriesAddBase64Attribute($repositories) {
+	static public function repositoriesAddBase64Attribute($repositories) {
 		$repositories_with_base64 = array();
 		foreach ($repositories as $value) {
 			$repo['path'] = $value;
@@ -166,10 +166,10 @@ class AdminController implements ControllerProviderInterface {
 	}
 	
 	
-	private function adminpanel($app){
+	static public function adminpanel($app){
 		if(isset($_SESSION['admin'])){
 			return $app['twig'] -> render('admin.twig', array(
-				'repositorypaths' => $this -> repositoriesAddBase64Attribute($app['git.repos']), 
+				'repositorypaths' => AdminController::repositoriesAddBase64Attribute($app['git.repos']),
 				'client' => trim($app['git.client'], '"'), 
 				'default_branch' => $app['git.default_branch'], 
 				'cache' => (empty($app['twig.options']['cache']) || $app['twig.options']['cache'] == 'false') ? false : true, 
@@ -181,7 +181,7 @@ class AdminController implements ControllerProviderInterface {
 		}		
 	}	
 	
-	private function isWindows()
+	static public function isWindows()
     {
         switch (PHP_OS) {
             case 'WIN32':
