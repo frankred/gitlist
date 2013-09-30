@@ -21,13 +21,24 @@ class AdminController implements ControllerProviderInterface {
 			# $app['session'] -> invalidate();
 			$app['session'] -> remove('admin');
 			
+			
 			return $app['twig'] -> render('admin_login.twig', array());
+<<<<<<< HEAD
 		}) -> bind('logout');
 
 		# Login
 		$route -> get('/admin/login', function(Request $request) use ($app) {
 			if ($app['session'] -> has('admin')) {
+				return $this -> adminpanel($app);
+=======
+		}) -> bind('logout');		
+		
+		
+		# Loginformular
+		$route -> get('/admin/login', function() use ($app) {
+			if(isset($_SESSION['admin'])){
 				return AdminController::adminpanel($app);
+>>>>>>> eedbb5cf3566f460258e6a8d30cb3a8485fcea69
 			} else {
 				return $app['twig'] -> render('admin_login.twig', array());
 			}
@@ -44,16 +55,26 @@ class AdminController implements ControllerProviderInterface {
 				$app['session'] -> set('admin', $app['admin.name']);
 
 				# goto adminpanel
-				return AdminController::adminpanel($app);
+<<<<<<< HEAD
+				return $this -> adminpanel($app);
 
+=======
+				return AdminController::adminpanel($app);
+							
+>>>>>>> eedbb5cf3566f460258e6a8d30cb3a8485fcea69
 			} else {
 				return $app['twig'] -> render('admin_login.twig', array('error' => 'Wrong login! Try again.'));
 			}
 		});
 
 		# Adminpanel
+<<<<<<< HEAD
 		$route -> get('/admin/admin', function(Request $request) use ($app) {
+			return $this -> adminpanel($app);
+=======
+		$route -> get('/admin/admin', function() use ($app) {
 			return AdminController::adminpanel($app);
+>>>>>>> eedbb5cf3566f460258e6a8d30cb3a8485fcea69
 		}) -> bind('adminpanel');
 
 		# AJAX: Adminpanel: Delete a repositories path out of the configuration
@@ -103,7 +124,7 @@ class AdminController implements ControllerProviderInterface {
 				$data = array();
 
 				# add abostrohpe if it is a windows system
-				if(AdminController::isWindows()){
+				if ($this -> isWindows()) {
 					$data['git']['client'] = "\"" . $request -> get('gitpath') . "\"";
 				} else {
 					$data['git']['client'] = $request -> get('gitpath');
@@ -140,11 +161,12 @@ class AdminController implements ControllerProviderInterface {
 					}
 				}
 
+<<<<<<< HEAD
 				$config -> addAndOverwrite($data);
 				$config -> toFile($app -> getPath() . 'config.ini');
 
 				return $app['twig'] -> render('admin.twig', 
-					array('repositorypaths' => AdminController::repositoriesAddBase64Attribute($data['git']['repositories']),
+					array('repositorypaths' => $this -> repositoriesAddBase64Attribute($data['git']['repositories']),
 						 'client' => trim($data['git']['client'], '"'), 
 						 'default_branch' => $data['git']['default_branch'], 
 						 'cache' => (empty($data['app']['cache']) || $data['app']['cache'] == 'false') ? false : true, 
@@ -155,9 +177,33 @@ class AdminController implements ControllerProviderInterface {
 						 'notification' => $notification, 
 						 'newpath' => $newpath)
 					);
+=======
+			# create new config
+			$data = array();
+			
+			# add abostrohpe if it is a windows system
+			if(AdminController::isWindows()){
+				$data['git']['client'] = "\"".$request -> get('gitpath')."\"";
+>>>>>>> eedbb5cf3566f460258e6a8d30cb3a8485fcea69
 			} else {
 				return $app['twig'] -> render('admin_login.twig', array());
 			}
+<<<<<<< HEAD
+=======
+			
+			$config -> addAndOverwrite($data);
+			$config -> toFile($app->getPath() .'config.ini');
+
+			return $app['twig'] -> render('admin.twig', array(
+				'repositorypaths' => AdminController::repositoriesAddBase64Attribute($data['git']['repositories']), 
+				'client' => trim($data['git']['client'], '"'),
+				'default_branch' => $data['git']['default_branch'], 
+				'cache' => (empty($data['app']['cache']) || $data['app']['cache'] == 'false') ? false : true, 
+				'debug' => (empty($data['app']['debug'])  || $data['app']['debug'] == 'false') ? false : true,
+				'notification' => $notification,
+				'newpath' => $newpath
+			));
+>>>>>>> eedbb5cf3566f460258e6a8d30cb3a8485fcea69
 		}) -> bind('savetoconfig');
 
 		return $route;
@@ -172,12 +218,13 @@ class AdminController implements ControllerProviderInterface {
 		}
 		return $repositories_with_base64;
 	}
+<<<<<<< HEAD
 
-	static public function adminpanel($app) {
+	private function adminpanel($app) {
 		if ($app['session'] -> has('admin')) {
 			return $app['twig'] -> render('admin.twig', 
 				array(
-					'repositorypaths' => AdminController::repositoriesAddBase64Attribute($app['git.repos']),
+					'repositorypaths' => $this -> repositoriesAddBase64Attribute($app['git.repos']),
 					'client' => trim($app['git.client'], '"'),
 					'default_branch' => $app['git.default_branch'],
 					'cache' => (empty($app['twig.options']['cache']) || $app['twig.options']['cache'] == 'false') ? false : true,
@@ -193,7 +240,7 @@ class AdminController implements ControllerProviderInterface {
 		}
 	}
 
-	static public function isWindows() {
+	private function isWindows() {
 		switch (PHP_OS) {
 			case 'WIN32' :
 			case 'WINNT' :
@@ -203,4 +250,35 @@ class AdminController implements ControllerProviderInterface {
 				return false;
 		}
 	}
+=======
+	
+	
+	static public function adminpanel($app){
+		if(isset($_SESSION['admin'])){
+			return $app['twig'] -> render('admin.twig', array(
+				'repositorypaths' => AdminController::repositoriesAddBase64Attribute($app['git.repos']),
+				'client' => trim($app['git.client'], '"'), 
+				'default_branch' => $app['git.default_branch'], 
+				'cache' => (empty($app['twig.options']['cache']) || $app['twig.options']['cache'] == 'false') ? false : true, 
+				'debug' => (empty($app['debug'])  || $app['debug'] == 'false') ? false : true,
+				'admin' => $_SESSION['admin']
+			));
+		} else {
+			return $app['twig'] -> render('admin_login.twig', array());
+		}		
+	}	
+	
+	static public function isWindows()
+    {
+        switch (PHP_OS) {
+            case 'WIN32':
+            case 'WINNT':
+            case 'Windows':
+                return true;
+            default:
+                return false;
+        }
+    }
+>>>>>>> eedbb5cf3566f460258e6a8d30cb3a8485fcea69
+
 }
