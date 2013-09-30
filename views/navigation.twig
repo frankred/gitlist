@@ -7,6 +7,11 @@
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="{{ path('homepage') }}">GitList</a>
+            {% if user is defined %} 
+            <ul class="nav pull-left">
+            	<li><a href="{{ path('user_logout') }}">logout</a></li>
+            </ul>
+            {% endif %}	
             <div class="nav-collapse">
                 <ul class="nav pull-right">
                     <li><a href="http://gitlist.org/">About</a></li>

@@ -96,6 +96,41 @@
 			<input type="radio" name="cache" value="no" {% if cache != true %}checked{% endif %}/>
 			No
 		</p>
+		
+
+		<h2>Visibility</h2>
+		<p>
+			Set up the visibility of your GitList. You can make your GitList private or public. If you choose private, you have to submit a username and password to access your repositories.
+		</p>
+		<p>
+			<input type="radio" name="public" value="yes" {% if public == true %}checked{% endif %} id="public_true"/>
+			Public
+			<input type="radio" name="public" value="no" {% if public != true %}checked{% endif %}  id="public_false"/>
+			Private
+		</p>
+		
+		<div id="login_data" {% if public == true %}style="display: none;"{% endif %}>
+			<h3>GitList Login</h3>
+			<p>
+				Define your GitList login data:
+			</p>
+			<p>
+				Name: 
+			</p>
+			<p>
+				<input type="text" name="login_name" value="{{ login_name }}"/>
+			</p>
+			
+			<p>
+				Password:
+			</p>
+			<p>
+				<input type="text" name="login_password" value="{{ login_password }}"/>
+			</p>
+		</div>
+		
+				
+		
 		<input type="submit" class="btn btn-success btn-large" value="Save to config.ini"/>
 	</form>
 	<hr />

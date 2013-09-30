@@ -5,6 +5,7 @@ namespace GitList;
 use Silex\Application as SilexApplication;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
+use Silex\Provider\SessionServiceProvider;
 use GitList\Provider\GitServiceProvider;
 use GitList\Provider\RepositoryUtilServiceProvider;
 use GitList\Provider\ViewUtilServiceProvider;
@@ -30,6 +31,9 @@ class Application extends SilexApplication
         $this->path = realpath($root);
 
         $this['debug'] = $config->get('app', 'debug');
+		$this['public'] = $config->get('app', 'public');
+		$this['login_name'] = $config->get('app', 'login_name');
+		$this['login_password'] = $config->get('app', 'login_password');
         $this['filetypes'] = $config->getSection('filetypes');
         $this['cache.archives'] = $this->getCachePath() . 'archives';
 		$this['admin.name'] = $config->get('admin', 'name');
@@ -58,6 +62,7 @@ class Application extends SilexApplication
         $this->register(new RepositoryUtilServiceProvider());
         $this->register(new UrlGeneratorServiceProvider());
         $this->register(new RoutingUtilServiceProvider());
+		$app->register(new SessionServiceProvider());
 
         $this['twig'] = $this->share($this->extend('twig', function ($twig, $app) {
             $twig->addFilter('htmlentities', new \Twig_Filter_Function('htmlentities'));

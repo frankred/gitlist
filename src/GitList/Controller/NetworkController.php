@@ -100,6 +100,7 @@ class NetworkController implements ControllerProviderInterface
                         'repo' => $repo,
                         'branch' => $branch,
                         'commitishPath' => $commitishPath,
+                        'user' => $app['session']->get('user')
                     )
                 );
             }

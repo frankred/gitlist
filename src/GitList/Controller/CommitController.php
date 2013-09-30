@@ -46,6 +46,7 @@ class CommitController implements ControllerProviderInterface
                 'tags'           => $repository->getTags(),
                 'commits'        => $categorized,
                 'file'           => $file,
+                'user'			 => $app['session']->get('user')
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('commitishPath', $app['util.routing']->getCommitishPathRegex())
@@ -72,7 +73,8 @@ class CommitController implements ControllerProviderInterface
                 'commits'        => $categorized,
                 'branches'       => $repository->getBranches(),
                 'tags'           => $repository->getTags(),
-                'query'          => $query
+                'query'          => $query,
+                'user'			 => $app['session']->get('user')
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('branch', $app['util.routing']->getBranchRegex())
@@ -87,6 +89,7 @@ class CommitController implements ControllerProviderInterface
                 'branch'         => $branch,
                 'repo'           => $repo,
                 'commit'         => $commit,
+                'user'			 => $app['session']->get('user')
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('commit', '[a-f0-9^]+')
@@ -109,6 +112,7 @@ class CommitController implements ControllerProviderInterface
                 'branches'       => $repository->getBranches(),
                 'tags'           => $repository->getTags(),
                 'blames'         => $blames,
+                'user'			 => $app['session']->get('user')
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('commitishPath', $app['util.routing']->getCommitishPathRegex())
