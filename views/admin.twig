@@ -5,135 +5,227 @@
 {% include 'navigation.twig' %}
 
 <div class="container">
-	
-	<div class="messages">
-		{% if notification is defined %}
-			{% if notification == 'saved' %}
-			<div class="alert alert-success">
-				<a class="close" data-dismiss="alert">×</a>
-				<strong>Success!</strong> config.ini saved!
+
+	<div class="messages"></div>
+
+	<div class="container-fluid" id="adminTabs">
+		<ul class="nav nav-tabs">
+			<li class="active">
+				<a href="#paths">Paths</a>
+			</li>
+			<li>
+				<a href="#debug">Debug</a>
+			</li>
+			<li>
+				<a href="#branch">Branch</a>
+			</li>
+			<li>
+				<a href="#visibility">Visibility</a>
+			</li>
+			<li>
+				<a href="#accounts">Accounts</a>
+			</li>
+		</ul>
+
+		<div class="tab-content">
+			<div class="tab-content">
+				<div class="tab-pane active" id="paths">
+					<h3><strong>Git</strong> Executable Path</h3>
+					<p>
+						Your path to the git client. No need to use apostrophe (") before and after the path on a windows systems.
+					</p>
+					<p>
+						<input type="text" class="singleProperty input-xlarge" name="git/client" value="{{client}}"/>
+					</p>
+
+					<h3>Paths to your Repositories</h3>
+					<p>
+						Listing of all repository paths:
+					</p>
+					<table class="tree">
+						<thead>
+							<tr>
+								<th width="100%">Path</th>
+								<th style="text-align: center;">Action</th>
+							</tr>
+						</thead>
+						<tbody id="repos_table">
+							{% for repo in repositorypaths %}
+							<tr>
+								<td><i class="icon-folder-open icon-spaced"></i><a href="{{ repo.path }}">{{ repo.path }}</td>
+								<td><a class="btn remove-repo" href="#" data-repofolder="{{ repo.path }}">remove</a></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<!-- Add repository  -->
+					<div class="pagination-right">
+						<a href="#add_repo_modal" class="btn btn-large"  data-toggle="modal"><i class="icon-plus"></i> Add</a>
+					</div>
+
+					<!-- Modal - Add user-->
+					<div id="add_repo_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								×
+							</button>
+							<h3 id="myModalLabel">Add a repository path</h3>
+						</div>
+						<div class="modal-body">
+							<div class="add_repo_modal_messages"></div>
+							<p>
+								You can add a new repository path.
+							</p>
+							<label>Path:
+								<input type="text" id="add_repo_path"/>
+							</label>
+						</div>
+						<div class="modal-footer">
+							<button class="btn" data-dismiss="modal" aria-hidden="true">
+								Close
+							</button>
+							<button id="add_repo" class="btn btn-primary">
+								Save changes
+							</button>
+						</div>
+					</div>
+
+				</div>
+				<div class="tab-pane" id="branch">
+					<h3>Default branch</h3>
+					<p>
+						Default branch when HEAD is detached:
+					</p>
+					<p>
+						<input type="text" class="singleProperty" name="git/default_branch" class="input-xlarge"  value="{{default_branch}}"/>
+					</p>
+				</div>
+				<div class="tab-pane" id="debug">
+					<h3>Debug</h3>
+					<p>
+						Activate debug mode in GitList:
+					</p>
+					<p>
+						<label>
+							{{ debug }}
+							<input type="radio" class="singleProperty" name="app/debug" value="true" {% if debug == true %}checked{% endif %}/>
+							Yes</label>
+
+						<label>
+							<input type="radio" class="singleProperty" name="app/debug" value="false" {% if debug != true %}checked{% endif %}/>
+							No</label>
+					</p>
+
+					<h3>Cache</h3>
+					<p>
+						Activate cache in GitList:
+					</p>
+					<p>
+						<label>
+							{{ cache }}
+							<input type="radio" class="singleProperty"  name="app/cache" value="true" {% if cache == true %}checked{% endif %}/>
+							Yes</label>
+						<label>
+							<input type="radio" class="singleProperty"  name="app/cache" value="false" {% if cache != true %}checked{% endif %}/>
+							No</label>
+					</p>
+				</div>
+
+				<div class="tab-pane" id="visibility">
+					<h3>Visibility</h3>
+					<p>
+						Set up the visibility of your GitList. You can make your GitList private or public. If it's private only users oder administrators can access the GitList. You can manage your user accounts in the tab 'Accounts':
+					</p>
+					<p>
+						<label>
+							<input type="radio" class="singleProperty" name="app/public" value="true" {% if public == true %}checked{% endif %} id="public_true"/>
+							Public</label>
+						<label>
+							<input type="radio" class="singleProperty" name="app/public" value="false" {% if public != true %}checked{% endif %}  id="public_false"/>
+							Private</label>
+					</p>
+				</div>
+
+				<div class="tab-pane" id="accounts">
+					<h3>GitList Accounts</h3>
+					<p>
+						Define your GitList login accounts:
+					</p>
+
+					<table class="tree">
+						<thead>
+							<tr>
+								<th width="100%">Name</th>
+								<th style="text-align: center;">Role</th>
+								<!-- <th style="text-align: center;">Password (SHA-512)</th> -->
+								<th style="text-align: center;">Action</th>
+							</tr>
+						</thead>
+						<tbody id="accounts_table">
+							{% for key, value in accounts %}
+							<tr>
+								{% if value[0] == 'ROLE_ADMIN' %}
+								<td><i class="icon-wrench icon-spaced"></i>{{key}} </td>
+								{% endif %}
+
+								{% if value[0] == 'ROLE_USER' %}
+								<td><i class="icon-user icon-spaced"></i>{{key}} </td>
+								{% endif %}
+
+								<td>{{ value[0] }}</td>
+								<!-- <td>{{ value[1] }}</td> -->
+								<td><a class="btn remove-account" href="#" data-name="{{key}}">remove</a></td>
+
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<!-- Add user -->
+					<div class="pagination-right">
+						<a href="#add_account_modal" class="btn btn-large"  data-toggle="modal"><i class="icon-plus"></i> Add</a>
+					</div>
+
+					<!-- Modal - Add user-->
+					<div id="add_account_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								×
+							</button>
+							<h3 id="myModalLabel">Add a new account</h3>
+						</div>
+						<div class="modal-body">
+							<div class="add_account_modal_messages"></div>
+							<p>
+								You can add a new user by name and role. Enter the password as plain text, it will be encrypted automatically.
+							</p>
+							<label>Name:
+								<input type="text" id="add_account_name"/>
+							</label>
+							<label>Password (plain):
+								<input type="text" id="add_account_password"/>
+							</label>
+							<label>Role:
+								<select  id="add_account_role">
+									<option value="ROLE_ADMIN">Admin</option>
+									<option value="ROLE_USER">User</option>
+								</select> </label>
+						</div>
+						<div class="modal-footer">
+							<button class="btn" data-dismiss="modal" aria-hidden="true">
+								Close
+							</button>
+							<button id="add_account" class="btn btn-primary">
+								Save changes
+							</button>
+						</div>
+					</div>
+				</div>
 			</div>
-			{% endif %}
-			{% if notification == 'error_wrong_path' %}
-			<div class="alert alert-error">
-				<a class="close" data-dismiss="alert">×</a>
-				<strong>Error!</strong> Wrong repositories path! There are no GIT repositories in {{newpath}}. 
-			</div>
-			{% endif %}	
-		{% endif %}		
-	</div>
-		
-	
-	<a href="{{ path('logout') }}" class="btn btn-primary btn-large" style="float: right;">Logout</a>
-	<h1>Adminpanel</h1>
-	<p>
-		In the Adminpanel you can change the <strong>config.ini</strong> via a user interface.
-	</p>
-	<form method="POST" action="{{ path('savetoconfig') }}">
-		<h2>Your <strong>git executable path</strong></h2>
-		<p>
-			Your path to the git client. No need to use apostrophe (") before and after the path on a windows systems.
-		</p>
-		<p>
-			<input type="text" id="gitpath" name="gitpath" class="input-xlarge" value="{{client}}"/>
-		</p>
-
-		<h2>Paths to your repositories</h2>
-		<p>
-			Listing of all repository paths:
-		</p>
-		<table class="tree">
-			<thead>
-				<tr>
-					<th width="100%">path</th>
-					<th style="text-align: center;">action</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for repo in repositorypaths %}
-				<tr>
-					<td><i class="icon-folder-open icon-spaced"></i><a href="{{ repo.path }}">{{ repo.path }}</td>
-					<td><a class="btn remove-repo" href="#" data-repofolder="{{ repo.base64 }}">remove</a></td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		
-		<h3>Add another repository path</h3>
-		<p>
-			Add another repositiries path to your list:
-		</p>
-		<p>
-			<input type="text" id="newpath" name="newpath" class="input-xlarge" />
-		</p>
-
-		<h2>Default branch</h2>
-		<p>
-			Default branch when HEAD is detached:
-		</p>
-		<p>
-			<input type="text" id="defaultbranch" name="defaultbranch" class="input-xlarge"  value="{{default_branch}}"/>
-		</p>
-
-		<h2>Debug</h2>
-		<p>
-			Activate debug mode in GitList:
-		</p>
-		<p>
-			<input type="radio" name="debug" value="yes" {% if debug == true %}checked{% endif %}/>
-			Yes
-			<input type="radio" name="debug" value="no" {% if debug != true %}checked{% endif %}/>
-			No
-		</p>
-
-		<h2>Cache</h2>
-		<p>
-			Activate cache in GitList:
-		</p>
-		<p>
-			<input type="radio" name="cache" value="yes" {% if cache == true %}checked{% endif %}/>
-			Yes
-			<input type="radio" name="cache" value="no" {% if cache != true %}checked{% endif %}/>
-			No
-		</p>
-		
-
-		<h2>Visibility</h2>
-		<p>
-			Set up the visibility of your GitList. You can make your GitList private or public. If you choose private, you have to submit a username and password to access your repositories.
-		</p>
-		<p>
-			<input type="radio" name="public" value="yes" {% if public == true %}checked{% endif %} id="public_true"/>
-			Public
-			<input type="radio" name="public" value="no" {% if public != true %}checked{% endif %}  id="public_false"/>
-			Private
-		</p>
-		
-		<div id="login_data" {% if public == true %}style="display: none;"{% endif %}>
-			<h3>GitList Login</h3>
-			<p>
-				Define your GitList login data:
-			</p>
-			<p>
-				Name: 
-			</p>
-			<p>
-				<input type="text" name="login_name" value="{{ login_name }}"/>
-			</p>
-			
-			<p>
-				Password:
-			</p>
-			<p>
-				<input type="text" name="login_password" value="{{ login_password }}"/>
-			</p>
 		</div>
-		
-				
-		
-		<input type="submit" class="btn btn-success btn-large" value="Save to config.ini"/>
-	</form>
-	<hr />
-	{% include 'footer.twig' %}
-</div>
-{% endblock %}
+
+		<hr />
+		{% include 'footer.twig' %}
+	</div>
+	{% endblock %}

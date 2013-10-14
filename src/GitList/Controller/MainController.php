@@ -15,16 +15,23 @@ class MainController implements ControllerProviderInterface
         $route = $app['controllers_factory'];
 		
 		$route->get('/', function() use ($app) {
-			if($app['public'] || $app['session'] -> has('user')){
-	            $repositories = $app['git']->getRepositories($app['git.repos']);
-	
-	            return $app['twig']->render('index.twig', array(
-	                'repositories'   => $repositories,
-	                'user' => $app['session']->get('user')
-	            ));
-        	} else {
-        		return $app['twig']->render('login.twig');
-        	}
+			 $repositories = $app['git']->getRepositories($app['git.repos']);
+		
+			if($app['public']){
+				return $app['twig']->render('index.twig', array(
+		                'repositories'   => $repositories
+		            ));
+			} else {
+				if($app['session'] -> has('user')){
+		            return $app['twig']->render('index.twig', array(
+		                'repositories'   => $repositories,
+		                'user' => $app['session']->get('user')
+		            ));
+	        	} else {
+	        		return $app['twig']->render('login.twig');
+	        	}
+			}
+			
 			
         })->bind('homepage');
 		
@@ -59,7 +66,7 @@ class MainController implements ControllerProviderInterface
 			$app['session']->remove('user');
 			
             # Go back to calling page
-            return $app->redirect($request->headers->get('Referer'));
+           return $app['twig']->render('login.twig');
         })->bind('user_logout');
 
 
