@@ -6,19 +6,29 @@
 
 <div class="container">
 	
-	<form class="form-signin" method="post" action="{{ path('homepage') }}">
-		{% if error is defined %}
+	{% if form == 'admin' %}
+	<form class="form-signin" method="post" action="{{ path('admin_login_check') }}">
+	{% endif %}
+
+	{% if form == 'user' %}
+	<form class="form-signin" method="post" action="{{ path('login_check') }}">
+	{% endif %}
+				
+		{% if error != '' %}
 			<div class="alert alert-error">
 				<a class="close" data-dismiss="alert">×</a>
-				<strong>Error!</strong> {{error}}. 
+				{{error}}. 
 			</div>
 		{% endif %}		
 		
-		<h2 class="form-signin-heading">GitList Login</h2>
-		<input type="text" class="input-block-level" placeholder="Name" name="login_name">
-		<input type="password" class="input-block-level" placeholder="Password" name="login_password">
-		<button class="btn btn-large btn-primary" type="submit">
-			Sign in
+		<h2 class="form-signin-heading">Login</h2>
+		<p>
+			To see the corresponding GitList you need to login. You can login as user or admin.
+		</p>
+		<input type="text" class="input-block-level" placeholder="Name" name="_username">
+		<input type="password" class="input-block-level" placeholder="Password" name="_password">
+		<button class="btn btn-large btn-primary input-block-level" type="submit">
+			Login
 		</button>
 	</form>
 </div>

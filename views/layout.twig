@@ -20,6 +20,9 @@
         <script src="{{ app.request.basepath }}/web/js/showdown.js"></script>
         <script src="{{ app.request.basepath }}/web/js/main.js"></script>
         <script src="{{ app.request.basepath }}/web/js/networkGraph.js"></script>
+        
+        {% if bind_admin_js is defined %}
         <script src="{{ app.request.basepath }}/web/js/admin.js"></script>
+		{% endif %}        
     </body>
 </html>
