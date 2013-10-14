@@ -39,8 +39,7 @@ class BlobController implements ControllerProviderInterface
                 'branch'         => $branch,
                 'breadcrumbs'    => $breadcrumbs,
                 'branches'       => $repository->getBranches(),
-                'tags'           => $repository->getTags(),
-				'user'			 => $app['session']->get('user')
+                'tags'           => $repository->getTags()
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('commitishPath', '.+')

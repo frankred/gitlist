@@ -41,8 +41,7 @@ class TreeController implements ControllerProviderInterface
                 'breadcrumbs'    => $breadcrumbs,
                 'branches'       => $repository->getBranches(),
                 'tags'           => $repository->getTags(),
-                'readme'         => $app['util.repository']->getReadme($repository, $branch),
-                'user'			 => $app['session']->get('user')
+                'readme'         => $app['util.repository']->getReadme($repository, $branch)
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('commitishPath', $app['util.routing']->getCommitishPathRegex())
@@ -65,8 +64,7 @@ class TreeController implements ControllerProviderInterface
                 'path'           => $tree,
                 'breadcrumbs'    => $breadcrumbs,
                 'branches'       => $repository->getBranches(),
-                'tags'           => $repository->getTags(),
-                'user'			 => $app['session']->get('user')
+                'tags'           => $repository->getTags()
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('branch', $app['util.routing']->getBranchRegex())

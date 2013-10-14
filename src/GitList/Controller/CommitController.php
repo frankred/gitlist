@@ -45,8 +45,7 @@ class CommitController implements ControllerProviderInterface
                 'branches'       => $repository->getBranches(),
                 'tags'           => $repository->getTags(),
                 'commits'        => $categorized,
-                'file'           => $file,
-                'user'			 => $app['session']->get('user')
+                'file'           => $file
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('commitishPath', $app['util.routing']->getCommitishPathRegex())
@@ -73,8 +72,7 @@ class CommitController implements ControllerProviderInterface
                 'commits'        => $categorized,
                 'branches'       => $repository->getBranches(),
                 'tags'           => $repository->getTags(),
-                'query'          => $query,
-                'user'			 => $app['session']->get('user')
+                'query'          => $query
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('branch', $app['util.routing']->getBranchRegex())
@@ -88,8 +86,7 @@ class CommitController implements ControllerProviderInterface
             return $app['twig']->render('commit.twig', array(
                 'branch'         => $branch,
                 'repo'           => $repo,
-                'commit'         => $commit,
-                'user'			 => $app['session']->get('user')
+                'commit'         => $commit
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('commit', '[a-f0-9^]+')
@@ -111,8 +108,7 @@ class CommitController implements ControllerProviderInterface
                 'branch'         => $branch,
                 'branches'       => $repository->getBranches(),
                 'tags'           => $repository->getTags(),
-                'blames'         => $blames,
-                'user'			 => $app['session']->get('user')
+                'blames'         => $blames
             ));
         })->assert('repo', $app['util.routing']->getRepositoryRegex())
           ->assert('commitishPath', $app['util.routing']->getCommitishPathRegex())
