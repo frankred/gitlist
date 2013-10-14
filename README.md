@@ -11,6 +11,19 @@ GitList is an elegant and modern web interface for interacting with multiple git
 * RSS feeds
 * Syntax highlighting
 * Repository statistics
+* Adminpanel
+
+##Adminpanel
+With the property "public" you can decide if only users and admins can see your GitList (public = false) or if everybody has access to your GitList (public = true).
+To use the adminpanel, just add the following lines to your config.ini. 
+```
+[app]
+public = true
+[accounts]
+users[] = 'user:5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='
+admins[] = 'admin:5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='
+```
+Users and admins can be added or removed via the adminpanel. Default Login is "admin":"foo" as an admin, or "user":"foo" as a user (without quotation marks).
 
 ## Screenshots
 [![GitList Screenshot](http://dl.dropbox.com/u/62064441/th1.jpg)](http://cloud.github.com/downloads/klaussilveira/gitlist/1.jpg)
@@ -18,6 +31,11 @@ GitList is an elegant and modern web interface for interacting with multiple git
 [![GitList Screenshot](http://dl.dropbox.com/u/62064441/th3.jpg)](http://cloud.github.com/downloads/klaussilveira/gitlist/3.jpg)
 [![GitList Screenshot](http://dl.dropbox.com/u/62064441/th4.jpg)](http://cloud.github.com/downloads/klaussilveira/gitlist/4.jpg)
 [![GitList Screenshot](http://dl.dropbox.com/u/62064441/th5.jpg)](http://cloud.github.com/downloads/klaussilveira/gitlist/5.jpg)
+###Adminpanel
+![GitList Screenshot](https://dl.dropboxusercontent.com/u/3669658/github/GitList/gitlist_adminpanel_3.png)
+![GitList Screenshot](https://dl.dropboxusercontent.com/u/3669658/github/GitList/gitlist_adminpanel_0.png)
+![GitList Screenshot](https://dl.dropboxusercontent.com/u/3669658/github/GitList/gitlist_adminpanel_1.png)
+![GitList Screenshot](https://dl.dropboxusercontent.com/u/3669658/github/GitList/gitlist_adminpanel_2.png)
 
 You can also see a live demo [here](http://git.gofedora.com).
 
